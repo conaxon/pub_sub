@@ -1,0 +1,5 @@
+if(EXISTS "D:/pub_sub/build/tests/test_message_queue[1]_tests.cmake")
+  include("D:/pub_sub/build/tests/test_message_queue[1]_tests.cmake")
+else()
+  add_test(test_message_queue_NOT_BUILT test_message_queue_NOT_BUILT)
+endif()

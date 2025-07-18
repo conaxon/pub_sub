@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/CMakeFiles/asio-populate"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/CMakeFiles/asio-populate.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/CMakeFiles/asio-populate-complete.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/asio-populate-prefix/src/asio-populate-stamp/asio-populate-build.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/asio-populate-prefix/src/asio-populate-stamp/asio-populate-configure.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/asio-populate-prefix/src/asio-populate-stamp/asio-populate-download.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/asio-populate-prefix/src/asio-populate-stamp/asio-populate-install.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/asio-populate-prefix/src/asio-populate-stamp/asio-populate-mkdir.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/asio-populate-prefix/src/asio-populate-stamp/asio-populate-patch.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/asio-populate-prefix/src/asio-populate-stamp/asio-populate-test.rule"
+		},
+		{
+			"file" : "D:/pub_sub/build/_deps/asio-subbuild/asio-populate-prefix/src/asio-populate-stamp/asio-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"asio-populate"
+		],
+		"name" : "asio-populate"
+	}
+}

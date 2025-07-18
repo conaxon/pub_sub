@@ -1,0 +1,50 @@
+[
+{
+  "directory": "D:/pub_sub/build",
+  "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/broker.dir/src/broker.cpp.obj -c /D/pub_sub/src/broker.cpp",
+  "file": "D:/pub_sub/src/broker.cpp",
+  "output": "CMakeFiles/broker.dir/src/broker.cpp.obj"
+},
+{
+  "directory": "D:/pub_sub/build",
+  "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/pub_client.dir/src/pub_client.cpp.obj -c /D/pub_sub/src/pub_client.cpp",
+  "file": "D:/pub_sub/src/pub_client.cpp",
+  "output": "CMakeFiles/pub_client.dir/src/pub_client.cpp.obj"
+},
+{
+  "directory": "D:/pub_sub/build",
+  "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/sub_client.dir/src/sub_client.cpp.obj -c /D/pub_sub/src/sub_client.cpp",
+  "file": "D:/pub_sub/src/sub_client.cpp",
+  "output": "CMakeFiles/sub_client.dir/src/sub_client.cpp.obj"
+},
+{
+  "directory": "D:/pub_sub/build/_deps/googletest-build/googlemock",
+  "command": "/C/msys64/mingw64/bin/c++.exe  -I/D/pub_sub/build/_deps/googletest-src/googlemock/include -I/D/pub_sub/build/_deps/googletest-src/googlemock -isystem /D/pub_sub/build/_deps/googletest-src/googletest/include -isystem /D/pub_sub/build/_deps/googletest-src/googletest -std=c++20 -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/gmock.dir/src/gmock-all.cc.obj -c /D/pub_sub/build/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "file": "D:/pub_sub/build/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj"
+},
+{
+  "directory": "D:/pub_sub/build/_deps/googletest-build/googlemock",
+  "command": "/C/msys64/mingw64/bin/c++.exe  -isystem /D/pub_sub/build/_deps/googletest-src/googlemock/include -isystem /D/pub_sub/build/_deps/googletest-src/googlemock -isystem /D/pub_sub/build/_deps/googletest-src/googletest/include -isystem /D/pub_sub/build/_deps/googletest-src/googletest -std=c++20 -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj -c /D/pub_sub/build/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "file": "D:/pub_sub/build/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj"
+},
+{
+  "directory": "D:/pub_sub/build/_deps/googletest-build/googletest",
+  "command": "/C/msys64/mingw64/bin/c++.exe  -I/D/pub_sub/build/_deps/googletest-src/googletest/include -I/D/pub_sub/build/_deps/googletest-src/googletest -std=c++20 -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/gtest.dir/src/gtest-all.cc.obj -c /D/pub_sub/build/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "file": "D:/pub_sub/build/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj"
+},
+{
+  "directory": "D:/pub_sub/build/_deps/googletest-build/googletest",
+  "command": "/C/msys64/mingw64/bin/c++.exe  -isystem /D/pub_sub/build/_deps/googletest-src/googletest/include -isystem /D/pub_sub/build/_deps/googletest-src/googletest -std=c++20 -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj -c /D/pub_sub/build/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "file": "D:/pub_sub/build/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj"
+},
+{
+  "directory": "D:/pub_sub/build/tests",
+  "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -isystem /D/pub_sub/build/_deps/googletest-src/googletest/include -isystem /D/pub_sub/build/_deps/googletest-src/googletest -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_message_queue.dir/test_message_queue.cpp.obj -c /D/pub_sub/tests/test_message_queue.cpp",
+  "file": "D:/pub_sub/tests/test_message_queue.cpp",
+  "output": "tests/CMakeFiles/test_message_queue.dir/test_message_queue.cpp.obj"
+}
+]
