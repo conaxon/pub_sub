@@ -28,8 +28,7 @@ private:
     // listens for subscribers
     boost::asio::ip::tcp::acceptor sub_acceptor_;
     // serialize handlers
-    boost::asio::strand<
-    boost::asio::io_context::executor_type>strand_;
+    boost::asio::strand<boost::asio::io_context::executor_type> strand_;
 
     // map channel names to queues
     std::unordered_map<std::string,

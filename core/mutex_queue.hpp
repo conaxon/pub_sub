@@ -17,13 +17,13 @@ public:
     void push(const T& item) override{
         {
             std::lock_guard<std::mutex> lock(mutex_);
-            queue_.push(item)
-            cond_.notify_one();
+            queue_.push(item);
         }
+            cond_.notify_one();
     }
 
     std::optional<T> wait_and_pop() override {
-        std::unique_lock<std::mutex> lock(muitex_);
+        std::unique_lock<std::mutex> lock(mutex_);
         cond_.wait(lock, [this]{return !queue_.empty();});
         T value = queue_.front();
         queue_.pop();

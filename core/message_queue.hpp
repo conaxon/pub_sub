@@ -10,5 +10,5 @@ class MessageQueue {
 public:
     virtual void push(const T& item) = 0;
     virtual std::optional<T> wait_and_pop() = 0;
-    virtual MessageQueue() = default;
+    virtual ~MessageQueue() = default;
 };

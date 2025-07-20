@@ -7,8 +7,10 @@ set(CMAKE_DEPENDS_GENERATOR "MSYS Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
+  "C:/msys64/mingw64/share/cmake/Modules/CMakeDetermineSystem.cmake"
   "C:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake"
   "C:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake"
+  "C:/msys64/mingw64/share/cmake/Modules/CMakeSystem.cmake.in"
   "C:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake"
   "C:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake"
   "C:/msys64/mingw64/share/cmake/Modules/ExternalProject.cmake"
@@ -36,6 +38,7 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+  "CMakeFiles/4.0.3/CMakeSystem.cmake"
   "asio_src-populate-prefix/tmp/asio_src-populate-mkdirs.cmake"
   "asio_src-populate-prefix/tmp/asio_src-populate-gitclone.cmake"
   "asio_src-populate-prefix/src/asio_src-populate-stamp/asio_src-populate-gitinfo.txt"

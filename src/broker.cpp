@@ -24,7 +24,7 @@ void Broker::start() {
 void Broker::do_accept_publisher() {
     pub_acceptor_.async_accept(
         boost::asio::make_strand(io_context_),
-        [this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket) {
+        [this](boost::system::error_code ec, boost::asio::ip::tcp::socket /*socket*/) {
             if (!ec) {
                 // TODO: Read framed message, parse channel header, enqueue into channels_[channel]
             }
@@ -37,7 +37,7 @@ void Broker::do_accept_publisher() {
 void Broker::do_accept_subscriber() {
     sub_acceptor_.async_accept(
         strand_,
-        [this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket) {
+        [this](boost::system::error_code ec, boost::asio::ip::tcp::socket /*socket*/) {
             if (!ec) {
                 // TODO: Read subscription request, and then loop popping from channels_[channel] to write to socket
             }

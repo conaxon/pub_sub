@@ -31,7 +31,11 @@ target_include_directories(asio INTERFACE
   ${asio_src_SOURCE_DIR}/asio/include
 )
 target_compile_definitions(asio INTERFACE ASIO_STANDALONE)
-target_link_libraries(asio INTERFACE Threads::Threads)
+if (WIN32)
+  target_link_libraries(asio INTERFACE Threads::Threads Ws2_32 Mswsock)
+else()
+  target_link_libraries(asio INTERFACE Threads::Threads)
+endif()
 
 # Pull in GoogleTest for unit testing
 FetchContent_Declare(
@@ -43,10 +47,19 @@ FetchContent_MakeAvailable(googletest)
 
 # Core interface library for shared headers and dependencies
 add_library(core INTERFACE)
-target_include_directories(core INTERFACE
-${CMAKE_CURRENT_SOURCE_DIR}
-${CMAKE_CURRENT_SOURCE_DIR}/core
-)
+file(GLOB_RECURSE CORE_HDR_DIRS 
+     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+     ${CMAKE_CURRENT_SOURCE_DIR}/core/*.hpp)
+
+# Convert to full paths, strip filenames to get directories:
+set(_unique_dirs "")
+foreach(h ${CORE_HDR_DIRS})
+  get_filename_component(dir ${h} PATH)
+  list(APPEND _unique_dirs ${CMAKE_CURRENT_SOURCE_DIR}/${dir})
+endforeach()
+list(REMOVE_DUPLICATES _unique_dirs)
+
+target_include_directories(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${_unique_dirs})
 target_link_libraries(core INTERFACE asio)
 
 # Broker and client executables
