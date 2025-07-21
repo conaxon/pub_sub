@@ -1275,5 +1275,10 @@ CMakeFiles/broker.dir/src/broker.cpp.obj: D:/pub_sub/src/broker.cpp \
  C:/msys64/mingw64/include/boost/asio/writable_pipe.hpp \
  C:/msys64/mingw64/include/boost/asio/write_at.hpp \
  C:/msys64/mingw64/include/boost/asio/impl/write_at.hpp \
- D:/pub_sub/core/message_queue.hpp \
+ D:/pub_sub/core/message_queue.hpp D:/pub_sub/core/mutex_queue.hpp \
+ C:/msys64/mingw64/include/c++/15.1.0/queue \
+ C:/msys64/mingw64/include/c++/15.1.0/deque \
+ C:/msys64/mingw64/include/c++/15.1.0/bits/stl_deque.h \
+ C:/msys64/mingw64/include/c++/15.1.0/bits/deque.tcc \
+ C:/msys64/mingw64/include/c++/15.1.0/bits/stl_queue.h \
  C:/msys64/mingw64/include/c++/15.1.0/iostream
