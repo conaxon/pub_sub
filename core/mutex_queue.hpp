@@ -1,3 +1,4 @@
+// filename: mutex_queue.hpp
 #pragma once
 #include <message_queue.hpp>
 #include <queue>
@@ -13,6 +14,7 @@ private:
     std::queue<T> queue_;
     std::mutex mutex_;
     std::condition_variable cond_;
+    bool open_ = true;
 public:
     void push(const T& item) override{
         {
@@ -24,9 +26,21 @@ public:
 
     std::optional<T> wait_and_pop() override {
         std::unique_lock<std::mutex> lock(mutex_);
-        cond_.wait(lock, [this]{return !queue_.empty();});
+        cond_.wait(lock, [this]{return !open_ || !queue_.empty();});
+        if (!queue_.empty()) {
         T value = queue_.front();
         queue_.pop();
         return value;
+        }
+
+        return std::nullopt;
+    }
+
+    void close() override {
+        {
+        std::lock_guard<std::mutex> lock(mutex_);
+        open_ = false;
+        }
+        cond_.notify_all();
     }
 };

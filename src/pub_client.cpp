@@ -1,3 +1,4 @@
+// filename: pub_client.cpp
 #include <boost/asio.hpp>
 #include <iostream>
 #include <vector>
@@ -10,7 +11,6 @@
 #endif
 
 
-// TODO: stub this out and wire
 int main(int argc, char* argv[]) {
     if (argc != 5) {
         std::cerr << "Usage pub_client <host> <port> <channel> <message?\n";
@@ -26,9 +26,17 @@ int main(int argc, char* argv[]) {
         boost::asio::io_context io;
 
         boost::asio::ip::tcp::resolver resolver(io);
-        auto endpoints = resolver.resolve(host, port);
+        auto endpoints = resolver.resolve(boost::asio::ip::tcp::v4(),host, port);
         boost::asio::ip::tcp::socket socket(io);
-        boost::asio::connect(socket, endpoints);
+        boost::system::error_code ec;
+        boost::asio::connect(socket, endpoints, ec);
+
+        if (ec) {
+            std::cerr << "[pub] connect failed: " << ec.message() << "\n";
+            return 1;
+        }
+
+        std::cout << "[pub] connected\n";
 
         uint16_t ch_len = htons(static_cast<uint16_t>(channel.size()));
         uint32_t msg_len = htonl(static_cast<uint32_t>(message.size()));
@@ -44,9 +52,17 @@ int main(int argc, char* argv[]) {
         buf.insert(buf.end(), channel.begin(), channel.end());
         buf.insert(buf.end(), message.begin(), message.end());
 
-        boost::asio::write(socket, boost::asio::buffer(buf));
+        boost::asio::write(socket, boost::asio::buffer(buf), ec);
+        std::size_t n = boost::asio::write(socket, boost::asio::buffer(buf), ec);
 
-        std::cout << "[SENT] channel=" << channel << "msg=\"" << message << "\"\n";
+        if (ec) {
+            std::cerr << "[pub] write failed: " << ec.message() << "\n";
+            return 1;
+        }
+
+        std::cout << "[SENT] bytes=" << n
+            << " channel=" << channel
+            << " msg=\"" << message << "\"\n";
     }
     catch (std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";

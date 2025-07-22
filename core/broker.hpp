@@ -1,3 +1,4 @@
+// filename: broker.hpp
 #pragma once
 #include <boost/asio.hpp>
 #include <message_queue.hpp>
@@ -70,12 +71,14 @@ private:
                         strand_(strand),
                         channels_(channels)
                     {}
-        
+            ~SubscriberSession();
             void start() { read_subscription(); }
-        
+            
     private:
         void read_subscription();
         void deliver_next();
+        void launch_worker();
+        void async_send(std::string msg);
     
         boost::asio::ip::tcp::socket socket_;
         boost::asio::strand<boost::asio::io_context::executor_type> strand_;
@@ -83,6 +86,6 @@ private:
         std::shared_ptr<MessageQueue<std::string>>>& channels_;
         std::shared_ptr<MessageQueue<std::string>> queue_;
         std::vector<char> buffer_;
+        std::atomic<bool> stopped_{false};
     };
-
 };

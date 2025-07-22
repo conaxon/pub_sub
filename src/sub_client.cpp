@@ -1,3 +1,4 @@
+// filename: sub_client.cpp
 #include <boost/asio.hpp>
 #include <iostream>
 #include <vector>
@@ -36,9 +37,9 @@ int main(int argc, char* argv[]) {
     std::cout << "Subscribed to channel '" << channel << "'....\n";
 
     for (;;) {
-        uint16_t payload_len_net;
+        uint32_t payload_len_net;
         boost::asio::read(socket, boost::asio::buffer(&payload_len_net, sizeof(payload_len_net)));
-        uint16_t payload_len = ntohs(payload_len_net);
+        uint32_t payload_len = ntohl(payload_len_net);
 
         std::vector<char> buf(payload_len);
         boost::asio::read(socket, boost::asio::buffer(buf));
