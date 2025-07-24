@@ -35,8 +35,9 @@ int main(int argc, char* argv[]) {
     boost::asio::write(socket,boost::asio::buffer(channel));
 
     std::cout << "Subscribed to channel '" << channel << "'....\n";
-
-    for (;;) {
+    
+    try {
+      for (;;) {
         uint32_t payload_len_net;
         boost::asio::read(socket, boost::asio::buffer(&payload_len_net, sizeof(payload_len_net)));
         uint32_t payload_len = ntohl(payload_len_net);
@@ -46,7 +47,13 @@ int main(int argc, char* argv[]) {
 
         std::string message(buf.begin(), buf.end());
         std::cout << "[RECV] " << message << std::endl;
+      }
     }
-
-    return 0;
-}
+    catch (const boost::system::system_error& e) {
+      if (e.code() == boost::asio::error::eof) {
+        std::cout << "*** Server closed connection, exiting\n";
+      } else {
+        std::cerr << "*** Error: " << e.what() << "\n";
+      }
+    }
+  }

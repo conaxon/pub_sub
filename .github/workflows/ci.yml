@@ -1,0 +1,111 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # 1 clang-format style check
+  format:
+    name: ❯ format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+      - name: Check formatting
+        run: |
+          git diff --exit-code -- $(git ls-files '*.cpp' '*.hpp') || \
+          (echo "🙅‍♂️ Code is not clang‑formatted. Run `clang-format -i`." && exit 1)
+
+  # 2 build, test, coverage
+  build-and-test:
+    name: ❯ build & test
+    runs-on: ubuntu-latest
+    needs: format
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+        # add msys if you later want an MSVC job:
+        os: [ubuntu-latest]  # , windows-latest
+    env:
+      BUILD_DIR: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake lcov
+          if [ "${{ matrix.compiler }}" = "gcc" ]; then
+            sudo apt-get install -y gcc g++
+          else
+            sudo apt-get install -y clang
+          fi
+
+      - name: Configure
+        run: |
+          mkdir -p $BUILD_DIR
+          cd $BUILD_DIR
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_C_COMPILER=${{ matrix.compiler }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}++ \
+            -DCMAKE_C_FLAGS="--coverage" \
+            -DCMAKE_CXX_FLAGS="--coverage"
+
+      - name: Build
+        run: cmake --build $BUILD_DIR --parallel
+
+      - name: Run tests
+        run: cd $BUILD_DIR && ctest --output-on-failure
+
+      - name: Capture coverage
+        if: matrix.compiler == 'gcc'
+        run: |
+          cd $BUILD_DIR
+          lcov --capture --directory . --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          genhtml coverage.info --output-directory coverage-html
+
+      - name: Upload coverage report
+        if: matrix.compiler == 'gcc'
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ${{ env.BUILD_DIR }}/coverage-html
+
+  # 3 deploy coverage to GitHub Pages (self-hosted badge)
+  deploy-coverage:
+    name: ❯ deploy coverage
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage-html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: coverage-html
+
+  # 4 CodeQL security scan
+  codeql:
+    name: ❯ codeql
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v2
+        with:
+          languages: cpp
+      - uses: github/codeql-action/autobuild@v2
+      - uses: github/codeql-action/analyze@v2
