@@ -1,6 +1,12 @@
 [
 {
   "directory": "D:/pub_sub/build",
+  "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/queue_factory.dir/src/queue_factory.cpp.obj -c /D/pub_sub/src/queue_factory.cpp",
+  "file": "D:/pub_sub/src/queue_factory.cpp",
+  "output": "CMakeFiles/queue_factory.dir/src/queue_factory.cpp.obj"
+},
+{
+  "directory": "D:/pub_sub/build",
   "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/broker.dir/src/broker.cpp.obj -c /D/pub_sub/src/broker.cpp",
   "file": "D:/pub_sub/src/broker.cpp",
   "output": "CMakeFiles/broker.dir/src/broker.cpp.obj"
@@ -16,6 +22,24 @@
   "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/sub_client.dir/src/sub_client.cpp.obj -c /D/pub_sub/src/sub_client.cpp",
   "file": "D:/pub_sub/src/sub_client.cpp",
   "output": "CMakeFiles/sub_client.dir/src/sub_client.cpp.obj"
+},
+{
+  "directory": "D:/pub_sub/build",
+  "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/bench_pub.dir/src/bench_pub.cpp.obj -c /D/pub_sub/src/bench_pub.cpp",
+  "file": "D:/pub_sub/src/bench_pub.cpp",
+  "output": "CMakeFiles/bench_pub.dir/src/bench_pub.cpp.obj"
+},
+{
+  "directory": "D:/pub_sub/build",
+  "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/bench_sub.dir/src/bench_sub.cpp.obj -c /D/pub_sub/src/bench_sub.cpp",
+  "file": "D:/pub_sub/src/bench_sub.cpp",
+  "output": "CMakeFiles/bench_sub.dir/src/bench_sub.cpp.obj"
+},
+{
+  "directory": "D:/pub_sub/build",
+  "command": "/C/msys64/mingw64/bin/c++.exe -DASIO_STANDALONE -I/D/pub_sub -I/D/pub_sub/core -I/D/pub_sub/build/_deps/asio_src-src/asio/include -isystem /D/pub_sub/build/_deps/googletest-src/googletest/include -isystem /D/pub_sub/build/_deps/googletest-src/googletest -std=c++20 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/test_spsc.dir/tests/test_spsc.cpp.obj -c /D/pub_sub/tests/test_spsc.cpp",
+  "file": "D:/pub_sub/tests/test_spsc.cpp",
+  "output": "CMakeFiles/test_spsc.dir/tests/test_spsc.cpp.obj"
 },
 {
   "directory": "D:/pub_sub/build/_deps/googletest-build/googlemock",

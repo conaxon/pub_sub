@@ -62,9 +62,12 @@ list(REMOVE_DUPLICATES _unique_dirs)
 target_include_directories(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${_unique_dirs})
 target_link_libraries(core INTERFACE asio)
 
-# Broker and client executables
+
+find_package(Boost REQUIRED)
+
+# ---- executables ----
 add_executable(broker src/broker.cpp)
-target_link_libraries(broker PRIVATE core)
+target_link_libraries(broker PRIVATE core queue_factory)
 
 add_executable(pub_client src/pub_client.cpp)
 target_link_libraries(pub_client PRIVATE core)
@@ -72,6 +75,19 @@ target_link_libraries(pub_client PRIVATE core)
 add_executable(sub_client src/sub_client.cpp)
 target_link_libraries(sub_client PRIVATE core)
 
-# Enable testing and add tests directory
+add_executable(bench_pub src/bench_pub.cpp)
+target_link_libraries(bench_pub PRIVATE core Boost::boost)
+
+add_executable(bench_sub src/bench_sub.cpp)
+target_link_libraries(bench_sub PRIVATE core Boost::boost)
+
+# ---- queue factory lib ----
+add_library(queue_factory src/queue_factory.cpp)
+target_link_libraries(queue_factory PUBLIC core)
+
+# ---- tests ----
 enable_testing()
 add_subdirectory(tests)
+add_executable(test_spsc tests/test_spsc.cpp)
+target_link_libraries(test_spsc PRIVATE core gtest_main)
+add_test(NAME test_spsc COMMAND test_spsc)

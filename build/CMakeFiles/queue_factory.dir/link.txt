@@ -1,0 +1,2 @@
+C:/msys64/mingw64/bin/ar.exe qc libqueue_factory.a CMakeFiles/queue_factory.dir/src/queue_factory.cpp.obj
+C:/msys64/mingw64/bin/ranlib.exe libqueue_factory.a

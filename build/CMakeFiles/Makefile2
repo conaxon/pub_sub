@@ -66,6 +66,10 @@ CMAKE_BINARY_DIR = /D/pub_sub/build
 all: CMakeFiles/broker.dir/all
 all: CMakeFiles/pub_client.dir/all
 all: CMakeFiles/sub_client.dir/all
+all: CMakeFiles/bench_pub.dir/all
+all: CMakeFiles/bench_sub.dir/all
+all: CMakeFiles/queue_factory.dir/all
+all: CMakeFiles/test_spsc.dir/all
 all: _deps/googletest-build/all
 all: tests/all
 .PHONY : all
@@ -74,6 +78,10 @@ all: tests/all
 codegen: CMakeFiles/broker.dir/codegen
 codegen: CMakeFiles/pub_client.dir/codegen
 codegen: CMakeFiles/sub_client.dir/codegen
+codegen: CMakeFiles/bench_pub.dir/codegen
+codegen: CMakeFiles/bench_sub.dir/codegen
+codegen: CMakeFiles/queue_factory.dir/codegen
+codegen: CMakeFiles/test_spsc.dir/codegen
 codegen: _deps/googletest-build/codegen
 codegen: tests/codegen
 .PHONY : codegen
@@ -87,6 +95,10 @@ preinstall: tests/preinstall
 clean: CMakeFiles/broker.dir/clean
 clean: CMakeFiles/pub_client.dir/clean
 clean: CMakeFiles/sub_client.dir/clean
+clean: CMakeFiles/bench_pub.dir/clean
+clean: CMakeFiles/bench_sub.dir/clean
+clean: CMakeFiles/queue_factory.dir/clean
+clean: CMakeFiles/test_spsc.dir/clean
 clean: _deps/googletest-build/clean
 clean: tests/clean
 .PHONY : clean
@@ -180,15 +192,15 @@ tests/clean: tests/CMakeFiles/test_message_queue.dir/clean
 # Target rules for target CMakeFiles/broker.dir
 
 # All Build rule for target.
-CMakeFiles/broker.dir/all:
+CMakeFiles/broker.dir/all: CMakeFiles/queue_factory.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/broker.dir/build.make CMakeFiles/broker.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/broker.dir/build.make CMakeFiles/broker.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=1,2 "Built target broker"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=5,6 "Built target broker"
 .PHONY : CMakeFiles/broker.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/broker.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/broker.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 0
 .PHONY : CMakeFiles/broker.dir/rule
@@ -200,7 +212,7 @@ broker: CMakeFiles/broker.dir/rule
 # codegen rule for target.
 CMakeFiles/broker.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/broker.dir/build.make CMakeFiles/broker.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=1,2 "Finished codegen for target broker"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=5,6 "Finished codegen for target broker"
 .PHONY : CMakeFiles/broker.dir/codegen
 
 # clean rule for target.
@@ -215,7 +227,7 @@ CMakeFiles/broker.dir/clean:
 CMakeFiles/pub_client.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pub_client.dir/build.make CMakeFiles/pub_client.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pub_client.dir/build.make CMakeFiles/pub_client.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=11,12 "Built target pub_client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=15,16 "Built target pub_client"
 .PHONY : CMakeFiles/pub_client.dir/all
 
 # Build rule for subdir invocation for target.
@@ -232,7 +244,7 @@ pub_client: CMakeFiles/pub_client.dir/rule
 # codegen rule for target.
 CMakeFiles/pub_client.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pub_client.dir/build.make CMakeFiles/pub_client.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=11,12 "Finished codegen for target pub_client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=15,16 "Finished codegen for target pub_client"
 .PHONY : CMakeFiles/pub_client.dir/codegen
 
 # clean rule for target.
@@ -247,7 +259,7 @@ CMakeFiles/pub_client.dir/clean:
 CMakeFiles/sub_client.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sub_client.dir/build.make CMakeFiles/sub_client.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sub_client.dir/build.make CMakeFiles/sub_client.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=13,14 "Built target sub_client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=19,20 "Built target sub_client"
 .PHONY : CMakeFiles/sub_client.dir/all
 
 # Build rule for subdir invocation for target.
@@ -264,7 +276,7 @@ sub_client: CMakeFiles/sub_client.dir/rule
 # codegen rule for target.
 CMakeFiles/sub_client.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sub_client.dir/build.make CMakeFiles/sub_client.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=13,14 "Finished codegen for target sub_client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=19,20 "Finished codegen for target sub_client"
 .PHONY : CMakeFiles/sub_client.dir/codegen
 
 # clean rule for target.
@@ -273,13 +285,142 @@ CMakeFiles/sub_client.dir/clean:
 .PHONY : CMakeFiles/sub_client.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/bench_pub.dir
+
+# All Build rule for target.
+CMakeFiles/bench_pub.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_pub.dir/build.make CMakeFiles/bench_pub.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_pub.dir/build.make CMakeFiles/bench_pub.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=1,2 "Built target bench_pub"
+.PHONY : CMakeFiles/bench_pub.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/bench_pub.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/bench_pub.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 0
+.PHONY : CMakeFiles/bench_pub.dir/rule
+
+# Convenience name for target.
+bench_pub: CMakeFiles/bench_pub.dir/rule
+.PHONY : bench_pub
+
+# codegen rule for target.
+CMakeFiles/bench_pub.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_pub.dir/build.make CMakeFiles/bench_pub.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=1,2 "Finished codegen for target bench_pub"
+.PHONY : CMakeFiles/bench_pub.dir/codegen
+
+# clean rule for target.
+CMakeFiles/bench_pub.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_pub.dir/build.make CMakeFiles/bench_pub.dir/clean
+.PHONY : CMakeFiles/bench_pub.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/bench_sub.dir
+
+# All Build rule for target.
+CMakeFiles/bench_sub.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_sub.dir/build.make CMakeFiles/bench_sub.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_sub.dir/build.make CMakeFiles/bench_sub.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=3,4 "Built target bench_sub"
+.PHONY : CMakeFiles/bench_sub.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/bench_sub.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/bench_sub.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 0
+.PHONY : CMakeFiles/bench_sub.dir/rule
+
+# Convenience name for target.
+bench_sub: CMakeFiles/bench_sub.dir/rule
+.PHONY : bench_sub
+
+# codegen rule for target.
+CMakeFiles/bench_sub.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_sub.dir/build.make CMakeFiles/bench_sub.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=3,4 "Finished codegen for target bench_sub"
+.PHONY : CMakeFiles/bench_sub.dir/codegen
+
+# clean rule for target.
+CMakeFiles/bench_sub.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_sub.dir/build.make CMakeFiles/bench_sub.dir/clean
+.PHONY : CMakeFiles/bench_sub.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/queue_factory.dir
+
+# All Build rule for target.
+CMakeFiles/queue_factory.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queue_factory.dir/build.make CMakeFiles/queue_factory.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queue_factory.dir/build.make CMakeFiles/queue_factory.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=17,18 "Built target queue_factory"
+.PHONY : CMakeFiles/queue_factory.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/queue_factory.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/queue_factory.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 0
+.PHONY : CMakeFiles/queue_factory.dir/rule
+
+# Convenience name for target.
+queue_factory: CMakeFiles/queue_factory.dir/rule
+.PHONY : queue_factory
+
+# codegen rule for target.
+CMakeFiles/queue_factory.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queue_factory.dir/build.make CMakeFiles/queue_factory.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=17,18 "Finished codegen for target queue_factory"
+.PHONY : CMakeFiles/queue_factory.dir/codegen
+
+# clean rule for target.
+CMakeFiles/queue_factory.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queue_factory.dir/build.make CMakeFiles/queue_factory.dir/clean
+.PHONY : CMakeFiles/queue_factory.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_spsc.dir
+
+# All Build rule for target.
+CMakeFiles/test_spsc.dir/all: _deps/googletest-build/googletest/CMakeFiles/gtest.dir/all
+CMakeFiles/test_spsc.dir/all: _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_spsc.dir/build.make CMakeFiles/test_spsc.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_spsc.dir/build.make CMakeFiles/test_spsc.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=23,24 "Built target test_spsc"
+.PHONY : CMakeFiles/test_spsc.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_spsc.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_spsc.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /D/pub_sub/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_spsc.dir/rule
+
+# Convenience name for target.
+test_spsc: CMakeFiles/test_spsc.dir/rule
+.PHONY : test_spsc
+
+# codegen rule for target.
+CMakeFiles/test_spsc.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_spsc.dir/build.make CMakeFiles/test_spsc.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=23,24 "Finished codegen for target test_spsc"
+.PHONY : CMakeFiles/test_spsc.dir/codegen
+
+# clean rule for target.
+CMakeFiles/test_spsc.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_spsc.dir/build.make CMakeFiles/test_spsc.dir/clean
+.PHONY : CMakeFiles/test_spsc.dir/clean
+
+#=============================================================================
 # Target rules for target _deps/googletest-build/googlemock/CMakeFiles/gmock.dir
 
 # All Build rule for target.
 _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/all: _deps/googletest-build/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/depend
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=3,4 "Built target gmock"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=7,8 "Built target gmock"
 .PHONY : _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/all
 
 # Build rule for subdir invocation for target.
@@ -296,7 +437,7 @@ gmock: _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/rule
 # codegen rule for target.
 _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=3,4 "Finished codegen for target gmock"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=7,8 "Finished codegen for target gmock"
 .PHONY : _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/codegen
 
 # clean rule for target.
@@ -312,7 +453,7 @@ _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/all: _deps/googletes
 _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/all: _deps/googletest-build/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/depend
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=5,6 "Built target gmock_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=9,10 "Built target gmock_main"
 .PHONY : _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -329,7 +470,7 @@ gmock_main: _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/rule
 # codegen rule for target.
 _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=5,6 "Finished codegen for target gmock_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=9,10 "Finished codegen for target gmock_main"
 .PHONY : _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/codegen
 
 # clean rule for target.
@@ -344,7 +485,7 @@ _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/clean:
 _deps/googletest-build/googletest/CMakeFiles/gtest.dir/all:
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/depend
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=7,8 "Built target gtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=11,12 "Built target gtest"
 .PHONY : _deps/googletest-build/googletest/CMakeFiles/gtest.dir/all
 
 # Build rule for subdir invocation for target.
@@ -361,7 +502,7 @@ gtest: _deps/googletest-build/googletest/CMakeFiles/gtest.dir/rule
 # codegen rule for target.
 _deps/googletest-build/googletest/CMakeFiles/gtest.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=7,8 "Finished codegen for target gtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=11,12 "Finished codegen for target gtest"
 .PHONY : _deps/googletest-build/googletest/CMakeFiles/gtest.dir/codegen
 
 # clean rule for target.
@@ -376,7 +517,7 @@ _deps/googletest-build/googletest/CMakeFiles/gtest.dir/clean:
 _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/all: _deps/googletest-build/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=9,10 "Built target gtest_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=13,14 "Built target gtest_main"
 .PHONY : _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -393,7 +534,7 @@ gtest_main: _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/rule
 # codegen rule for target.
 _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=9,10 "Finished codegen for target gtest_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=13,14 "Finished codegen for target gtest_main"
 .PHONY : _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/codegen
 
 # clean rule for target.
@@ -409,7 +550,7 @@ tests/CMakeFiles/test_message_queue.dir/all: _deps/googletest-build/googletest/C
 tests/CMakeFiles/test_message_queue.dir/all: _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_message_queue.dir/build.make tests/CMakeFiles/test_message_queue.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_message_queue.dir/build.make tests/CMakeFiles/test_message_queue.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=15,16 "Built target test_message_queue"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=21,22 "Built target test_message_queue"
 .PHONY : tests/CMakeFiles/test_message_queue.dir/all
 
 # Build rule for subdir invocation for target.
@@ -426,7 +567,7 @@ test_message_queue: tests/CMakeFiles/test_message_queue.dir/rule
 # codegen rule for target.
 tests/CMakeFiles/test_message_queue.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_message_queue.dir/build.make tests/CMakeFiles/test_message_queue.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=15,16 "Finished codegen for target test_message_queue"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/D/pub_sub/build/CMakeFiles --progress-num=21,22 "Finished codegen for target test_message_queue"
 .PHONY : tests/CMakeFiles/test_message_queue.dir/codegen
 
 # clean rule for target.

@@ -9,15 +9,22 @@
 #include <arpa/inet.h>
 #endif
 #include <boost/asio/bind_executor.hpp>
+#include <spsc_queue_adapter.hpp>
+#include "core/thread_pool.hpp"
+#include <lf_queue.hpp>
+#include <core/queue_factory.hpp>
+ThreadPool g_pool(std::thread::hardware_concurrency());
 
 // Constructs the broker, binds acceptors, and initializes the strand
 Broker::Broker(boost::asio::io_context& io_context,
                unsigned short pub_port,
-               unsigned short sub_port)
+               unsigned short sub_port,
+               QueueKind kind)
     : io_context_(io_context),
       pub_acceptor_(io_context, {boost::asio::ip::tcp::v4(), pub_port}),
       sub_acceptor_(io_context, {boost::asio::ip::tcp::v4(), sub_port}),
-      strand_(io_context.get_executor())
+      strand_(io_context.get_executor()),
+      queue_kind_(kind)
 {
     std::cout << "[broker] ctor: pub_port=" << pub_port
               << " sub_port=" << sub_port << "\n";
@@ -42,7 +49,7 @@ void Broker::do_accept_publisher() {
             } else {
                 std::cout << "[broker] publisher connected\n";
                 // on accept, create and start a session to handle framing
-                auto session = std::make_shared<PublisherSession>(std::move(socket), strand_, channels_);
+                auto session = std::make_shared<PublisherSession>(std::move(socket), strand_, channels_, queue_kind_);
                 // keep the session alive across all async ops
                 session->start();
             }
@@ -81,7 +88,7 @@ void Broker::PublisherSession::read_body(uint16_t channel_len, uint32_t payload_
             std::string payload(buffer_.data() + channel_len, buffer_.size() - channel_len);
             // create the queue
             if (!channels_[channel]) {
-                channels_[channel] = std::make_shared<MutexQueue<std::string>>();
+                channels_[channel] = make_queue(kind_);
             }
             std::cout << "[Broker] RX '" << payload << "' on channel" << channel << "' \n";
             channels_[channel]->push(payload);
@@ -101,7 +108,8 @@ void Broker::do_accept_subscriber() {
                 auto session = std::make_shared<SubscriberSession>(
                     std::move(sock),
                     strand_,
-                    channels_);
+                    channels_,
+                    queue_kind_);
                 session->start();
             }
             // Continue accepting next subscriber
@@ -161,19 +169,16 @@ void Broker::SubscriberSession::deliver_next() {
         } 
 
 void Broker::SubscriberSession::launch_worker() {
+    extern ThreadPool g_pool;
     auto self = shared_from_this();
-    std::thread([self] {
+    g_pool.post([self]{
         while (!self->stopped_) {
             auto opt = self->queue_->wait_and_pop();
             if (!opt) break;
             auto msg = std::move(*opt);
-            std::cout << "[broker] dispatching to subscriber: '" << msg << "'\n";
-            boost::asio::post(self->strand_,
-                [self, msg = std::move(msg)] {
-                    self->async_send(msg);
-                });
+            boost::asio::post(self->strand_, [self, msg = std::move(msg)](){ self->async_send(msg); });
         }
-    }).detach();
+    });
 }
 
 void Broker::SubscriberSession::async_send(std::string msg) {
@@ -216,11 +221,20 @@ int main(int argc, char* argv[]) {
         std::cerr << "Usage: broker <pub_port> <sub_port>";
         return 1;
     }
+    
     unsigned short pub_port = static_cast<unsigned short>(std::atoi(argv[1]));
     unsigned short sub_port = static_cast<unsigned short>(std::atoi(argv[2]));
 
+    auto pick_kind = [](const char* v)->QueueKind{
+        if (!v) return QueueKind::Mutex;
+        std::string s{v};
+        if (s == "lf")   return QueueKind::LockFree;
+        if (s == "spsc") return QueueKind::Spsc;
+        return QueueKind::Mutex;
+    };
+    QueueKind kind = pick_kind(std::getenv("BROKER_QUEUE"));
     boost::asio::io_context io_context;
-    Broker broker(io_context, pub_port, sub_port);
+    Broker broker(io_context, pub_port, sub_port, kind);
     // Enter the I/O event loop, dispatching asynchronous handlers
     io_context.run();
     return 0;

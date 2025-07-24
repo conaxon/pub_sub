@@ -7,16 +7,19 @@
 #include <memory>
 #include <vector>
 #include <cstdint>
+#include "core/mutex_queue.hpp"
+#include "core/lf_queue.hpp"
+#include "core/spsc_queue_adapter.hpp"
+#include "core/queue_factory.hpp"
 
-// Broker handles the connection of clients on the different ports
-// decouples publishers from subs
 class Broker {
 public:
     // io_context: async operations
     // pub_port and sub_port fixed channels for publishers and subscribers
     Broker(boost::asio::io_context& io_context,
         unsigned short pub_port,
-        unsigned short sub_port);
+        unsigned short sub_port,
+        QueueKind kind);
 
     // Start accepting connections
     void start();
@@ -24,6 +27,7 @@ public:
 private:
     void do_accept_publisher();
     void do_accept_subscriber();
+    bool use_lf_;
 
     boost::asio::io_context& io_context_;
     // listens for publishers
@@ -32,6 +36,8 @@ private:
     boost::asio::ip::tcp::acceptor sub_acceptor_;
     // serialize handlers
     boost::asio::strand<boost::asio::io_context::executor_type> strand_;
+    // define the kind of queue to use
+    QueueKind queue_kind_;
 
     // map channel names to queues
     std::unordered_map<std::string,
@@ -42,8 +48,8 @@ private:
     public:
         PublisherSession(boost::asio::ip::tcp::socket socket,
                         boost::asio::strand<boost::asio::io_context::executor_type> strand,
-                        std::unordered_map<std::string, std::shared_ptr<MessageQueue<std::string>>>& channels)
-                        : socket_(std::move(socket)), strand_(strand), channels_(channels) {}
+                        std::unordered_map<std::string, std::shared_ptr<MessageQueue<std::string>>>& channels, QueueKind kind)
+                        : socket_(std::move(socket)), strand_(strand), channels_(channels), kind_(kind) {}
         
         void start() { read_header(); }
 
@@ -57,6 +63,7 @@ private:
             std::shared_ptr<MessageQueue<std::string>>>& channels_;
         std::vector<char> buffer_;
         static constexpr size_t header_size = sizeof(uint16_t) + sizeof(uint32_t);
+        QueueKind kind_;
     };
 
     class SubscriberSession:
@@ -66,10 +73,11 @@ private:
                 SubscriberSession(boost::asio::ip::tcp::socket socket,
                 boost::asio::strand<boost::asio::io_context::executor_type> strand,
                 std::unordered_map<std::string,
-                    std::shared_ptr<MessageQueue<std::string>>>& channels):
+                    std::shared_ptr<MessageQueue<std::string>>>& channels, QueueKind kind):
                         socket_(std::move(socket)),
                         strand_(strand),
-                        channels_(channels)
+                        channels_(channels),
+                        kind_(kind)
                     {}
             ~SubscriberSession();
             void start() { read_subscription(); }
@@ -84,6 +92,7 @@ private:
         boost::asio::strand<boost::asio::io_context::executor_type> strand_;
         std::unordered_map<std::string,
         std::shared_ptr<MessageQueue<std::string>>>& channels_;
+        QueueKind kind_;
         std::shared_ptr<MessageQueue<std::string>> queue_;
         std::vector<char> buffer_;
         std::atomic<bool> stopped_{false};

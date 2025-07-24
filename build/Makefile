@@ -211,6 +211,58 @@ sub_client/fast:
 .PHONY : sub_client/fast
 
 #=============================================================================
+# Target rules for targets named bench_pub
+
+# Build rule for target.
+bench_pub: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 bench_pub
+.PHONY : bench_pub
+
+# fast build rule for target.
+bench_pub/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_pub.dir/build.make CMakeFiles/bench_pub.dir/build
+.PHONY : bench_pub/fast
+
+#=============================================================================
+# Target rules for targets named bench_sub
+
+# Build rule for target.
+bench_sub: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 bench_sub
+.PHONY : bench_sub
+
+# fast build rule for target.
+bench_sub/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_sub.dir/build.make CMakeFiles/bench_sub.dir/build
+.PHONY : bench_sub/fast
+
+#=============================================================================
+# Target rules for targets named queue_factory
+
+# Build rule for target.
+queue_factory: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 queue_factory
+.PHONY : queue_factory
+
+# fast build rule for target.
+queue_factory/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queue_factory.dir/build.make CMakeFiles/queue_factory.dir/build
+.PHONY : queue_factory/fast
+
+#=============================================================================
+# Target rules for targets named test_spsc
+
+# Build rule for target.
+test_spsc: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_spsc
+.PHONY : test_spsc
+
+# fast build rule for target.
+test_spsc/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_spsc.dir/build.make CMakeFiles/test_spsc.dir/build
+.PHONY : test_spsc/fast
+
+#=============================================================================
 # Target rules for targets named gmock
 
 # Build rule for target.
@@ -275,6 +327,54 @@ test_message_queue/fast:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_message_queue.dir/build.make tests/CMakeFiles/test_message_queue.dir/build
 .PHONY : test_message_queue/fast
 
+src/bench_pub.obj: src/bench_pub.cpp.obj
+.PHONY : src/bench_pub.obj
+
+# target to build an object file
+src/bench_pub.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_pub.dir/build.make CMakeFiles/bench_pub.dir/src/bench_pub.cpp.obj
+.PHONY : src/bench_pub.cpp.obj
+
+src/bench_pub.i: src/bench_pub.cpp.i
+.PHONY : src/bench_pub.i
+
+# target to preprocess a source file
+src/bench_pub.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_pub.dir/build.make CMakeFiles/bench_pub.dir/src/bench_pub.cpp.i
+.PHONY : src/bench_pub.cpp.i
+
+src/bench_pub.s: src/bench_pub.cpp.s
+.PHONY : src/bench_pub.s
+
+# target to generate assembly for a file
+src/bench_pub.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_pub.dir/build.make CMakeFiles/bench_pub.dir/src/bench_pub.cpp.s
+.PHONY : src/bench_pub.cpp.s
+
+src/bench_sub.obj: src/bench_sub.cpp.obj
+.PHONY : src/bench_sub.obj
+
+# target to build an object file
+src/bench_sub.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_sub.dir/build.make CMakeFiles/bench_sub.dir/src/bench_sub.cpp.obj
+.PHONY : src/bench_sub.cpp.obj
+
+src/bench_sub.i: src/bench_sub.cpp.i
+.PHONY : src/bench_sub.i
+
+# target to preprocess a source file
+src/bench_sub.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_sub.dir/build.make CMakeFiles/bench_sub.dir/src/bench_sub.cpp.i
+.PHONY : src/bench_sub.cpp.i
+
+src/bench_sub.s: src/bench_sub.cpp.s
+.PHONY : src/bench_sub.s
+
+# target to generate assembly for a file
+src/bench_sub.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_sub.dir/build.make CMakeFiles/bench_sub.dir/src/bench_sub.cpp.s
+.PHONY : src/bench_sub.cpp.s
+
 src/broker.obj: src/broker.cpp.obj
 .PHONY : src/broker.obj
 
@@ -323,6 +423,30 @@ src/pub_client.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pub_client.dir/build.make CMakeFiles/pub_client.dir/src/pub_client.cpp.s
 .PHONY : src/pub_client.cpp.s
 
+src/queue_factory.obj: src/queue_factory.cpp.obj
+.PHONY : src/queue_factory.obj
+
+# target to build an object file
+src/queue_factory.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queue_factory.dir/build.make CMakeFiles/queue_factory.dir/src/queue_factory.cpp.obj
+.PHONY : src/queue_factory.cpp.obj
+
+src/queue_factory.i: src/queue_factory.cpp.i
+.PHONY : src/queue_factory.i
+
+# target to preprocess a source file
+src/queue_factory.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queue_factory.dir/build.make CMakeFiles/queue_factory.dir/src/queue_factory.cpp.i
+.PHONY : src/queue_factory.cpp.i
+
+src/queue_factory.s: src/queue_factory.cpp.s
+.PHONY : src/queue_factory.s
+
+# target to generate assembly for a file
+src/queue_factory.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/queue_factory.dir/build.make CMakeFiles/queue_factory.dir/src/queue_factory.cpp.s
+.PHONY : src/queue_factory.cpp.s
+
 src/sub_client.obj: src/sub_client.cpp.obj
 .PHONY : src/sub_client.obj
 
@@ -347,6 +471,30 @@ src/sub_client.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sub_client.dir/build.make CMakeFiles/sub_client.dir/src/sub_client.cpp.s
 .PHONY : src/sub_client.cpp.s
 
+tests/test_spsc.obj: tests/test_spsc.cpp.obj
+.PHONY : tests/test_spsc.obj
+
+# target to build an object file
+tests/test_spsc.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_spsc.dir/build.make CMakeFiles/test_spsc.dir/tests/test_spsc.cpp.obj
+.PHONY : tests/test_spsc.cpp.obj
+
+tests/test_spsc.i: tests/test_spsc.cpp.i
+.PHONY : tests/test_spsc.i
+
+# target to preprocess a source file
+tests/test_spsc.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_spsc.dir/build.make CMakeFiles/test_spsc.dir/tests/test_spsc.cpp.i
+.PHONY : tests/test_spsc.cpp.i
+
+tests/test_spsc.s: tests/test_spsc.cpp.s
+.PHONY : tests/test_spsc.s
+
+# target to generate assembly for a file
+tests/test_spsc.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_spsc.dir/build.make CMakeFiles/test_spsc.dir/tests/test_spsc.cpp.s
+.PHONY : tests/test_spsc.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -360,23 +508,39 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
+	@echo "... bench_pub"
+	@echo "... bench_sub"
 	@echo "... broker"
 	@echo "... gmock"
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
 	@echo "... pub_client"
+	@echo "... queue_factory"
 	@echo "... sub_client"
 	@echo "... test_message_queue"
+	@echo "... test_spsc"
+	@echo "... src/bench_pub.obj"
+	@echo "... src/bench_pub.i"
+	@echo "... src/bench_pub.s"
+	@echo "... src/bench_sub.obj"
+	@echo "... src/bench_sub.i"
+	@echo "... src/bench_sub.s"
 	@echo "... src/broker.obj"
 	@echo "... src/broker.i"
 	@echo "... src/broker.s"
 	@echo "... src/pub_client.obj"
 	@echo "... src/pub_client.i"
 	@echo "... src/pub_client.s"
+	@echo "... src/queue_factory.obj"
+	@echo "... src/queue_factory.i"
+	@echo "... src/queue_factory.s"
 	@echo "... src/sub_client.obj"
 	@echo "... src/sub_client.i"
 	@echo "... src/sub_client.s"
+	@echo "... tests/test_spsc.obj"
+	@echo "... tests/test_spsc.i"
+	@echo "... tests/test_spsc.s"
 .PHONY : help
 
 

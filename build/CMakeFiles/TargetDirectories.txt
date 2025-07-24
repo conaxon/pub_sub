@@ -1,6 +1,10 @@
 D:/pub_sub/build/CMakeFiles/broker.dir
 D:/pub_sub/build/CMakeFiles/pub_client.dir
 D:/pub_sub/build/CMakeFiles/sub_client.dir
+D:/pub_sub/build/CMakeFiles/bench_pub.dir
+D:/pub_sub/build/CMakeFiles/bench_sub.dir
+D:/pub_sub/build/CMakeFiles/queue_factory.dir
+D:/pub_sub/build/CMakeFiles/test_spsc.dir
 D:/pub_sub/build/CMakeFiles/test.dir
 D:/pub_sub/build/CMakeFiles/edit_cache.dir
 D:/pub_sub/build/CMakeFiles/rebuild_cache.dir
