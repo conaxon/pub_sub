@@ -107,5 +107,22 @@ jobs:
       - uses: github/codeql-action/init@v2
         with:
           languages: cpp
-      - uses: github/codeql-action/autobuild@v2
-      - uses: github/codeql-action/analyze@v2
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libboost-all-dev
+      - name: Configure for CodeQL
+        run: |
+          mkdir build-codeql
+          cd build-codeql
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_CXX_COMPILER=g++ \
+            -DBUILD_DOCS=OFF
+      - name: Build for CodeQL
+        run: |
+          cd build-codeql
+          cmake --build . --parallel
+      - name: Run CodeQL queries
+        uses: github/codeql-action/analyze@v2
