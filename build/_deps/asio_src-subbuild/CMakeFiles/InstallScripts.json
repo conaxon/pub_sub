@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"D:/pub_sub/build/_deps/asio_src-subbuild/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
