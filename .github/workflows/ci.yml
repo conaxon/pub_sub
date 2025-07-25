@@ -34,6 +34,13 @@ jobs:
     needs: format
     strategy:
       matrix:
+        include:
+          - name: gcc
+            CC: gcc
+            CXX: g++
+          - name: clang
+            CC: clang
+            CXX: clang++
         compiler: [gcc, clang]
         # add msys if you later want an MSVC job:
         os: [ubuntu-latest]  # , windows-latest
@@ -57,12 +64,12 @@ jobs:
 
       - name: Configure
         run: |
-          mkdir -p $BUILD_DIR
+          mkdir -p $BUILD_DIR && cd $BUILD_DIR
           cd $BUILD_DIR
           cmake .. \
             -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_C_COMPILER=${{ matrix.compiler }} \
-            -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}++ \
+            -DCMAKE_C_COMPILER=${{ matrix.CC }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.CXX }}++ \
             -DCMAKE_C_FLAGS="--coverage" \
             -DCMAKE_CXX_FLAGS="--coverage"
 
