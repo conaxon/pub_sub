@@ -82,8 +82,10 @@ jobs:
         run: |
           cd build
           lcov --capture \
-               --directory . \
-               --output-file coverage.info
+           --directory . \
+           --output-file coverage.info \
+           --rc geninfo_unexecuted_blocks=1 \
+           --rc geninfo_ignore_errors=mismatch
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           genhtml coverage.info --output-directory coverage-html
       - name: Upload coverage artifact
