@@ -49,7 +49,7 @@ jobs:
       - name: Configure (MSYS2 Bash)
         shell: msys2 {0}
         run: |
-          mkdir -p build && cd build \
+          mkdir -p build && cd build
           cmake .. -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug \
           -DBOOST_ROOT=$BOOST_ROOT
       - name: Build (MSYS2 Bash)
