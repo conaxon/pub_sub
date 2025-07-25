@@ -31,6 +31,8 @@ jobs:
     name: "❯ Build & Test (Windows)"
     runs-on: windows-latest
     needs: format
+    env:
+      BOOST_ROOT: /mingw64
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,13 +45,16 @@ jobs:
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-boost
             cmake
-      - name: Configure
+      - name: Configure (MSYS2 Bash)
+        shell: bash -lc
         run: |
-          mkdir build && cd build
+          mkdir -p build && cd build
           cmake .. -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug
-      - name: Build
+      - name: Build (MSYS2 Bash)
+        shell: bash -lc
         run: cmake --build build --parallel
       - name: Run tests
+        shell: bash -lc
         run: cd build && ctest --output-on-failure
 
   build_linux:
