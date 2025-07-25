@@ -82,8 +82,9 @@ jobs:
         run: |
           cd build
           /usr/bin/geninfo . \
-          --zero-unexecuted \
-          --ignore-errors mismatch \
+            --rc geninfo_unexecuted_blocks=1 \
+            --ignore-errors mismatch \
+            . \
           --output-filename coverage.info
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           genhtml coverage.info --output-directory coverage-html
