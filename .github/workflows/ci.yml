@@ -64,14 +64,24 @@ jobs:
 
       - name: Configure
         run: |
-          mkdir -p $BUILD_DIR && cd $BUILD_DIR
+          rm -rf $BUILD_DIR
+          mkdir -p $BUILD_DIR
           cd $BUILD_DIR
-          cmake .. \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_C_COMPILER=${{ matrix.CC }} \
-            -DCMAKE_CXX_COMPILER=${{ matrix.CXX }}++ \
-            -DCMAKE_C_FLAGS="--coverage" \
-            -DCMAKE_CXX_FLAGS="--coverage"
+          if ["${{matrix.compiler}}" = "gcc"]; then
+            cmake .. \
+              -DCMAKE_BUILD_TYPE=Debug \
+              -DCMAKE_C_COMPILER=${{ matrix.CC }} \
+              -DCMAKE_CXX_COMPILER=${{ matrix.CXX }}++ \
+              -DCMAKE_C_FLAGS="--coverage" \
+              -DCMAKE_CXX_FLAGS="--coverage"
+            else
+              cmake .. \
+                -DCMAKE_BUILD_TYPE=Debug \
+                -DCMAKE_C_COMPILER=clang \
+                -DCMAKE_CXX_COMPILER=clang++ \
+                -DCMAKE_C_FLAGS="--coverage" \
+                -DCMAKE_CXX_FLAGS="--coverage"
+            fi
 
       - name: Build
         run: cmake --build $BUILD_DIR --parallel
