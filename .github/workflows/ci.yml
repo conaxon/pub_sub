@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+            submodules: false
       - name: Install clang-format
         run: sudo apt-get update && sudo apt-get install -y clang-format
       - name: Check formatting
@@ -38,7 +40,8 @@ jobs:
       BUILD_DIR: build
     steps:
       - uses: actions/checkout@v4
-
+        with:
+            submodules: false
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -89,7 +92,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-
+        with:
+            submodules: false
       - name: Download coverage artifact
         uses: actions/download-artifact@v3
         with:
@@ -108,6 +112,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+            submodules: false
       - uses: github/codeql-action/init@v2
         with:
           languages: cpp
