@@ -36,6 +36,16 @@ public:
         return std::nullopt;
     }
 
+    std::optional<T> try_pop() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (queue_.empty())
+            return std::nullopt;
+
+        T value = queue_.front();
+        queue_.pop();
+        return value;
+    }
+
     void close() override {
         {
         std::lock_guard<std::mutex> lock(mutex_);

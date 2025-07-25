@@ -95,3 +95,7 @@ add_subdirectory(tests)
 add_executable(test_spsc tests/test_spsc.cpp)
 target_link_libraries(test_spsc PRIVATE core gtest_main)
 add_test(NAME test_spsc COMMAND test_spsc)
+
+add_executable(test_lf_queue tests/test_lf_queue.cpp)
+target_link_libraries(test_lf_queue PRIVATE core gtest_main)
+add_test(NAME test_lf_queue COMMAND test_lf_queue)
