@@ -45,11 +45,13 @@ jobs:
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-boost
             cmake
+            make
       - name: Configure (MSYS2 Bash)
         shell: msys2 {0}
         run: |
-          mkdir -p build && cd build
-          cmake .. -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug
+          mkdir -p build && cd build \
+          cmake .. -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug \
+          -DBOOST_ROOT=$BOOST_ROOT
       - name: Build (MSYS2 Bash)
         shell: msys2 {0}
         run: cmake --build build --parallel
