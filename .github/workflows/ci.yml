@@ -46,15 +46,15 @@ jobs:
             mingw-w64-x86_64-boost
             cmake
       - name: Configure (MSYS2 Bash)
-        shell: bash -lc {0}
+        shell: msys2 {0}
         run: |
           mkdir -p build && cd build
           cmake .. -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Debug
       - name: Build (MSYS2 Bash)
-        shell: bash -lc {0}
+        shell: msys2 {0}
         run: cmake --build build --parallel
       - name: Run tests
-        shell: bash -lc {0}
+        shell: msys2 {0}
         run: cd build && ctest --output-on-failure
 
   build_linux:
