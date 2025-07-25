@@ -55,7 +55,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake lcov
-          sudo apt-get install -y libboost-all-dev gcc-13 g++13
+          sudo apt-get install -y libboost-all-dev
           if [ "${{ matrix.compiler }}" = "gcc" ]; then
             sudo apt-get install -y gcc g++
           else
@@ -93,7 +93,6 @@ jobs:
         if: matrix.compiler == 'gcc'
         run: |
           cd $BUILD_DIR
-          export GCPV=gcov-13
           lcov --capture --directory . --ignore-errors version --output-file coverage.info
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           genhtml coverage.info --output-directory coverage-html
