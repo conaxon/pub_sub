@@ -93,7 +93,7 @@ jobs:
         if: matrix.compiler == 'gcc'
         run: |
           cd $BUILD_DIR
-          lcov --capture --directory . --output-file coverage.info
+          lcov --capture --directory . --ignore-errors version --output-file coverage.info
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           genhtml coverage.info --output-directory coverage-html
 
