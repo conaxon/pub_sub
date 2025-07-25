@@ -13,6 +13,10 @@ elseif (MSVC)
     add_compile_options(/W4 /WX)
 endif()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
+  add_compile_options(-Wno-unused-private-field)
+endif()
+
 # Pull in standalone Asio (header-only) via FetchContent
 include(FetchContent)
 FetchContent_Declare(
