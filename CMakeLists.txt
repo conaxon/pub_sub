@@ -64,7 +64,8 @@ endforeach()
 list(REMOVE_DUPLICATES _unique_dirs)
 
 target_include_directories(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${_unique_dirs})
-target_link_libraries(core INTERFACE asio)
+# target_link_libraries(core INTERFACE asio)
+target_link_libraries(core INTERFACE asio $<$PLATFORM_ID:Windows>:ws2_32>)
 
 
 find_package(Boost REQUIRED)
