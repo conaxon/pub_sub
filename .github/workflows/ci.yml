@@ -21,11 +21,7 @@ jobs:
       - name: Install clang-format
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            libboost-all-dev \
-            lcov
+          sudo apt-get install -y build-essential cmake libboost-all-dev lcov
       - name: Check formatting
         run: |
           git diff --exit-code -- $(git ls-files '*.cpp' '*.hpp') \
