@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 #include <cstdint>
+#include <cstdlib>
+#include <algorithm>
 #include "core/mutex_queue.hpp"
 #include "core/lf_queue.hpp"
 #include "core/spsc_queue_adapter.hpp"
@@ -25,6 +27,8 @@ public:
         QueueKind kind,
         std::shared_ptr<BrokerContext> ctx);
 
+    ~Broker();
+
     // Start accepting connections
     void start();
 
@@ -34,6 +38,9 @@ private:
     void setup_acceptor(boost::asio::ip::tcp::acceptor& acc,
                         unsigned short port,
                         const char* label);
+
+    static constexpr unsigned kBackoffBaseMs = 10;
+    static constexpr unsigned kBackoffMaxMs = 1000;
 
     bool use_lf_;
 
@@ -52,6 +59,11 @@ private:
     // map channel names to queues
     std::unordered_map<std::string,
         std::shared_ptr<MessageQueue<std::string>>> channels_;
+
+    boost::asio::steady_timer pub_acceptor_retry_timer_;
+    boost::asio::steady_timer sub_acceptor_retry_timer_;
+    unsigned pub_backoff_pow2_{0};
+    unsigned sub_backoff_pow2_{0};
 
     // session per connection handling
     class PublisherSession : public std::enable_shared_from_this<PublisherSession> {
@@ -103,10 +115,11 @@ private:
                         strand_(strand),
                         channels_(channels),
                         kind_(kind),
-                        ctx_(std::move(ctx))
-                    {}
-            ~SubscriberSession();
-            void start() { read_subscription(); }
+                        ctx_(std::move(ctx)) {}
+
+        ~SubscriberSession();
+        
+        void start() { read_subscription(); }
             
     private:
         void read_subscription();

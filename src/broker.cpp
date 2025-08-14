@@ -64,11 +64,13 @@ Broker::Broker(boost::asio::io_context& io_context,
                QueueKind kind,
                std::shared_ptr<BrokerContext> ctx)
     : io_context_(io_context),
-      pub_acceptor_(io_context, {boost::asio::ip::tcp::v4(), pub_port}),
-      sub_acceptor_(io_context, {boost::asio::ip::tcp::v4(), sub_port}),
+      pub_acceptor_(io_context),
+      sub_acceptor_(io_context),
       strand_(io_context.get_executor()),
       queue_kind_(kind),
-      ctx_(std::move(ctx))
+      ctx_(std::move(ctx)),
+      pub_acceptor_retry_timer_(io_context),
+      sub_acceptor_retry_timer_(io_context)
     
 {
     setup_acceptor(pub_acceptor_, pub_port, "publisher");
@@ -80,6 +82,16 @@ Broker::Broker(boost::asio::io_context& io_context,
     start();
 }
 
+Broker::~Broker() {
+    boost::system::error_code ignore;
+    pub_acceptor_retry_timer_.cancel();
+    sub_acceptor_retry_timer_.cancel();
+    pub_acceptor_.cancel(ignore);
+    sub_acceptor_.cancel(ignore);
+    pub_acceptor_.close(ignore);
+    sub_acceptor_.close(ignore);
+}
+
 void Broker::setup_acceptor(boost::asio::ip::tcp::acceptor& acc,
                             unsigned short port,
                             const char* label)
@@ -89,61 +101,54 @@ void Broker::setup_acceptor(boost::asio::ip::tcp::acceptor& acc,
 
     boost::system::error_code ec;
 
+    // Try dual-stack IPv6 first
     tcp::endpoint ep6(tcp::v6(), port);
-
     acc.open(ep6.protocol(), ec);
-    
     if (!ec) {
         acc.set_option(asio::socket_base::reuse_address(true), ec); ec.clear();
-
         acc.set_option(asio::ip::v6_only(false), ec); ec.clear();
-
         acc.bind(ep6, ec);
-
-        if(!ec) {
+        if (!ec) {
             acc.listen(asio::socket_base::max_listen_connections, ec);
-            if(!ec) {
+            if (!ec) {
                 asio::ip::v6_only v6only_opt;
                 bool v6only_value = true;
-                if (!acc.get_option(v6only_opt, ec)) v6only_value = v6only_opt.value();
+                acc.get_option(v6only_opt, ec);
+                if (!ec) v6only_value = v6only_opt.value();
 
                 std::cout << "[broker] " << label
                           << " listening on [::]:" << port
                           << (v6only_value ? " (IPv6-only)" : " (dual-stack)")
                           << "\n";
-                
                 return;
             }
         }
-
         boost::system::error_code ignore;
         acc.close(ignore);
     }
+
+    // Fallback to IPv4-only
     ec.clear();
     tcp::endpoint ep4(tcp::v4(), port);
     acc.open(ep4.protocol(), ec);
-    if(ec) {
+    if (ec) {
         std::cerr << "[broker] FAILED to open " << label
                   << " acceptor (v4): " << ec.message() << "\n";
         throw boost::system::system_error(ec);
     }
-
     acc.set_option(asio::socket_base::reuse_address(true), ec); ec.clear();
-
     acc.bind(ep4, ec);
     if (ec) {
         std::cerr << "[broker] FAILED to bind " << label
                   << " on 0.0.0.0:" << port << " (v4): " << ec.message() << "\n";
         throw boost::system::system_error(ec);
     }
-
     acc.listen(asio::socket_base::max_listen_connections, ec);
     if (ec) {
         std::cerr << "[broker] FAILED to listen " << label
                   << " (v4): " << ec.message() << "\n";
         throw boost::system::system_error(ec);
     }
-
     std::cout << "[broker] " << label
               << " listening on 0.0.0.0:" << port << " (IPv4-only fallback)\n";
 }
@@ -155,42 +160,72 @@ void Broker::start() {
 
 // Asynchronously accept publisher connections and re-arm
 void Broker::do_accept_publisher() {
-    std::cout << "[broker] waiting for publisher...\n";
+    using tcp = boost::asio::ip::tcp;
+
     pub_acceptor_.async_accept(
-        //boost::asio::make_strand(io_context_),
         strand_,
-        [this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket) {
+        [this](const boost::system::error_code& ec, tcp::socket socket) {
             if (ec) {
-                std::cout << "[broker] accept publisher error: " << ec.message() << "\n";
-            } else {
-                std::cout << "[broker] publisher connected\n";
-                // on accept, create and start a session to handle framing
+                if (ec == boost::asio::error::operation_aborted) {
+                    return; // shutting down
+                }
+                // backoff = min(kMaxMs, kBaseMs << pow2), with jitter ±25%
+                pub_backoff_pow2_ = std::min<unsigned>(pub_backoff_pow2_ + 1, 7);
+                unsigned delay_ms = std::min<unsigned>(kBackoffMaxMs,
+                                                       kBackoffBaseMs << pub_backoff_pow2_);
+                unsigned jitter = delay_ms / 4;
+                unsigned rand0  = static_cast<unsigned>(std::rand()) % (2 * jitter + 1);
+                unsigned delay_with_jitter = delay_ms - jitter + rand0;
+
+                std::cerr << "[broker] accept publisher error: " << ec.message()
+                          << " (retry in " << delay_with_jitter << " ms)\n";
+
+                pub_acceptor_retry_timer_.expires_after(std::chrono::milliseconds(delay_with_jitter));
+                pub_acceptor_retry_timer_.async_wait(
+                    boost::asio::bind_executor(
+                        strand_,
+                        [this](const boost::system::error_code& tec) {
+                            if (!tec) do_accept_publisher();
+                        }));
+                return;
+            }
+
+            // Success: reset backoff
+            pub_backoff_pow2_ = 0;
+
+            // Optional: IP ban check
+            bool banned = false;
+            {
                 boost::system::error_code ep_ec;
                 auto ep = socket.remote_endpoint(ep_ec);
                 if (!ep_ec) {
                     const std::string ip = ep.address().to_string();
                     const auto now = std::chrono::steady_clock::now();
-                    bool banned = false;
-                    {
-                        std::lock_guard<std::mutex> lk(ctx_->bad_peers_mu);
-                        auto it = ctx_->bad_peers.find(ip);
-                        if (it != ctx_->bad_peers.end() && it->second.until > now) {
-                            banned = true;
-                        } else if (it != ctx_->bad_peers.end() && it->second.until <= now) {
-                            it->second.strikes=0;
-                        }
-                    }
-                    if (banned) {
-                        std::cerr << "[broker] rejecting banned publisher IP " << ip << "\n";
-                        boost::system::error_code ignore;
-                        socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignore);
-                        socket.close(ignore);
-                        do_accept_publisher();
-                        return;
+                    std::lock_guard<std::mutex> lk(ctx_->bad_peers_mu);
+                    auto it = ctx_->bad_peers.find(ip);
+                    if (it != ctx_->bad_peers.end() && it->second.until > now) {
+                        banned = true;
+                    } else if (it != ctx_->bad_peers.end() && it->second.until <= now) {
+                        it->second.strikes = 0;
                     }
                 }
             }
-            // Continue accepting next publisher
+            if (banned) {
+                std::cerr << "[broker] rejecting banned publisher\n";
+                boost::system::error_code ignore;
+                socket.shutdown(tcp::socket::shutdown_both, ignore);
+                socket.close(ignore);
+                do_accept_publisher();
+                return;
+            }
+
+            std::cout << "[broker] publisher connected\n";
+            // Create and start publisher session
+            auto session = std::make_shared<PublisherSession>(
+                std::move(socket), strand_, channels_, queue_kind_, ctx_);
+            session->start();
+
+            // Re-arm
             do_accept_publisher();
         });
 }
@@ -317,24 +352,46 @@ void Broker::PublisherSession::reject_malformed(const char* where, uint16_t ch_l
 
 // Asynchronously accept subscriber connections and re-arm
 void Broker::do_accept_subscriber() {
-    std::cout << "[broker] waiting for subscriber...\n";
+    using tcp = boost::asio::ip::tcp;
     sub_acceptor_.async_accept(
         strand_,
-        [this](boost::system::error_code ec, boost::asio::ip::tcp::socket sock) {
-            if (!ec) {
-                std::cout << "[broker] subscriber connected\n";
-                auto session = std::make_shared<SubscriberSession>(
-                    std::move(sock),
-                    strand_,
-                    channels_,
-                    queue_kind_,
-                    ctx_);
-                session->start();
+        [this](const boost::system::error_code& ec, tcp::socket sock) {
+            if (ec) {
+                if (ec == boost::asio::error::operation_aborted) {
+                    return; // shutting down
+                }
+                sub_backoff_pow2_ = std::min<unsigned>(sub_backoff_pow2_ + 1, 7);
+                unsigned delay_ms = std::min<unsigned>(kBackoffMaxMs,
+                                                       kBackoffBaseMs << sub_backoff_pow2_);
+                unsigned jitter = delay_ms / 4;
+                unsigned rand0  = static_cast<unsigned>(std::rand()) % (2 * jitter + 1);
+                unsigned delay_with_jitter = delay_ms - jitter + rand0;
+
+                std::cerr << "[broker] accept subscriber error: " << ec.message()
+                          << " (retry in " << delay_with_jitter << " ms)\n";
+
+                sub_acceptor_retry_timer_.expires_after(std::chrono::milliseconds(delay_with_jitter));
+                sub_acceptor_retry_timer_.async_wait(
+                    boost::asio::bind_executor(
+                        strand_,
+                        [this](const boost::system::error_code& tec) {
+                            if (!tec) do_accept_subscriber();
+                        }));
+                return;
             }
-            // Continue accepting next subscriber
+
+            // Success: reset backoff
+            sub_backoff_pow2_ = 0;
+
+            std::cout << "[broker] subscriber connected\n";
+            auto session = std::make_shared<SubscriberSession>(
+                std::move(sock), strand_, channels_, queue_kind_, ctx_);
+            session->start();
+
+            // Re-arm
             do_accept_subscriber();
         });
-    }
+}
 
 Broker::SubscriberSession::~SubscriberSession() {
     stopped_.store(true, std::memory_order_relaxed);

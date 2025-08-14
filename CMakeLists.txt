@@ -17,7 +17,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "Appl
   add_compile_options(-Wno-unused-private-field)
 endif()
 
-# Pull in standalone Asio (header-only) via FetchContent
+# -------- Asio (header-only) via FetchContent --------
 include(FetchContent)
 FetchContent_Declare(
   asio_src
@@ -26,10 +26,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(asio_src)
 
-# Threads support (for Asio)
 find_package(Threads REQUIRED)
 
-# Define Asio interface target
 add_library(asio INTERFACE)
 target_include_directories(asio INTERFACE
   ${asio_src_SOURCE_DIR}/asio/include
@@ -41,7 +39,7 @@ else()
   target_link_libraries(asio INTERFACE Threads::Threads)
 endif()
 
-# Pull in GoogleTest for unit testing
+# -------- GoogleTest --------
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
@@ -49,13 +47,17 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-# Core interface library for shared headers and dependencies
+# -------- Boost headers (for unique_function, etc.) --------
+find_package(Boost REQUIRED)
+
+# -------- core interface (headers + deps) --------
 add_library(core INTERFACE)
+
+# Discover header dirs under core/
 file(GLOB_RECURSE CORE_HDR_DIRS 
      RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
      ${CMAKE_CURRENT_SOURCE_DIR}/core/*.hpp)
 
-# Convert to full paths, strip filenames to get directories:
 set(_unique_dirs "")
 foreach(h ${CORE_HDR_DIRS})
   get_filename_component(dir ${h} PATH)
@@ -64,15 +66,20 @@ endforeach()
 list(REMOVE_DUPLICATES _unique_dirs)
 
 target_include_directories(core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${_unique_dirs})
-target_link_libraries(core INTERFACE asio)
-# target_link_libraries(core INTERFACE asio $<$PLATFORM_ID:Windows>:ws2_32>)
+# Add both asio and Boost headers to everything that links 'core'
+target_link_libraries(core INTERFACE asio Boost::boost)
 
+# -------- queue factory lib --------
+add_library(queue_factory src/queue_factory.cpp)
+target_link_libraries(queue_factory PUBLIC core)
 
-find_package(Boost REQUIRED)
+# -------- thread_pool lib (implementation of core/thread_pool.hpp) --------
+add_library(thread_pool src/thread_pool.cpp)
+target_link_libraries(thread_pool PUBLIC core)
 
-# ---- executables ----
+# -------- executables --------
 add_executable(broker src/broker.cpp)
-target_link_libraries(broker PRIVATE core queue_factory)
+target_link_libraries(broker PRIVATE core queue_factory thread_pool)
 
 add_executable(pub_client src/pub_client.cpp)
 target_link_libraries(pub_client PRIVATE core)
@@ -81,25 +88,15 @@ add_executable(sub_client src/sub_client.cpp)
 target_link_libraries(sub_client PRIVATE core)
 
 add_executable(bench_pub src/bench_pub.cpp)
-target_link_libraries(bench_pub PRIVATE core Boost::boost)
+target_link_libraries(bench_pub PRIVATE core) # Boost headers already via core
 
 add_executable(bench_sub src/bench_sub.cpp)
-target_link_libraries(bench_sub PRIVATE core Boost::boost)
+target_link_libraries(bench_sub PRIVATE core) # Boost headers already via core
 
-# ---- queue factory lib ----
-add_library(queue_factory src/queue_factory.cpp)
-target_link_libraries(queue_factory PUBLIC core)
-
-# ---- thread_pool lib ----
-add_library(thread_pool src/thread_pool.cpp)
-target_link_libraries(thread_pool PUBLIC core)
-
-# broker needs the pool
-target_link_libraries(broker PRIVATE thread_pool)
-
-# ---- tests ----
+# -------- tests --------
 enable_testing()
 add_subdirectory(tests)
+
 add_executable(test_spsc tests/test_spsc.cpp)
 target_link_libraries(test_spsc PRIVATE core gtest_main)
 add_test(NAME test_spsc COMMAND test_spsc)

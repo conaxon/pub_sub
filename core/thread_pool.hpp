@@ -1,3 +1,4 @@
+// filename: core/thread_pool.hpp
 #pragma once
 #include <atomic>
 #include <condition_variable>
@@ -7,6 +8,7 @@
 #include <queue>
 #include <thread>
 #include <vector>
+#include <iostream>
 
 class ThreadPool {
 public:
@@ -18,7 +20,7 @@ public:
 
     template <class F>
     void post(F&& f) {
-        if (stop_.load(std::memory_order_acquire)) return;   // ignore after stop
+        if (stop_.load(std::memory_order_acquire)) return;
         {
             std::lock_guard<std::mutex> lk(mu_);
             if (stop_) return;
@@ -32,7 +34,7 @@ public:
 private:
     void worker_loop();
 
-    std::atomic<bool> stop_{false};               
+    std::atomic<bool> stop_{false};
     std::mutex mu_;
     std::condition_variable cv_;
     std::queue<std::function<void()>> tasks_;
