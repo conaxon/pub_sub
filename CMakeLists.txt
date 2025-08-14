@@ -90,6 +90,13 @@ target_link_libraries(bench_sub PRIVATE core Boost::boost)
 add_library(queue_factory src/queue_factory.cpp)
 target_link_libraries(queue_factory PUBLIC core)
 
+# ---- thread_pool lib ----
+add_library(thread_pool src/thread_pool.cpp)
+target_link_libraries(thread_pool PUBLIC core)
+
+# broker needs the pool
+target_link_libraries(broker PRIVATE thread_pool)
+
 # ---- tests ----
 enable_testing()
 add_subdirectory(tests)

@@ -10,6 +10,7 @@ template<typename T>
 class MessageQueue {
 public:
     virtual void push(const T& item) = 0;
+    virtual bool try_push(const T& item) { push(item); return true; }
     virtual std::optional<T> wait_and_pop() = 0;
     virtual void close() = 0;
     virtual ~MessageQueue() = default;

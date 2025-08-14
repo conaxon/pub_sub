@@ -1,3 +1,4 @@
+// filename: spsc_queue_adapter.hpp
 #pragma once
 #include <message_queue.hpp>
 #include <optional>

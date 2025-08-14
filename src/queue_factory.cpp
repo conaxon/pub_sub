@@ -1,3 +1,4 @@
+// filename: src/queue_factory.cpp
 #include <queue_factory.hpp>
 
 std::shared_ptr<MessageQueue<std::string>> make_queue(QueueKind kind) {

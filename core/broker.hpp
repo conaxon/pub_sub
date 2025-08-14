@@ -11,6 +11,9 @@
 #include "core/lf_queue.hpp"
 #include "core/spsc_queue_adapter.hpp"
 #include "core/queue_factory.hpp"
+#include "core/broker_context.hpp"
+#include <condition_variable>
+#include <mutex>
 
 class Broker {
 public:
@@ -19,7 +22,8 @@ public:
     Broker(boost::asio::io_context& io_context,
         unsigned short pub_port,
         unsigned short sub_port,
-        QueueKind kind);
+        QueueKind kind,
+        std::shared_ptr<BrokerContext> ctx);
 
     // Start accepting connections
     void start();
@@ -27,6 +31,10 @@ public:
 private:
     void do_accept_publisher();
     void do_accept_subscriber();
+    void setup_acceptor(boost::asio::ip::tcp::acceptor& acc,
+                        unsigned short port,
+                        const char* label);
+
     bool use_lf_;
 
     boost::asio::io_context& io_context_;
@@ -39,6 +47,8 @@ private:
     // define the kind of queue to use
     QueueKind queue_kind_;
 
+    std::shared_ptr<BrokerContext> ctx_;
+
     // map channel names to queues
     std::unordered_map<std::string,
         std::shared_ptr<MessageQueue<std::string>>> channels_;
@@ -48,15 +58,26 @@ private:
     public:
         PublisherSession(boost::asio::ip::tcp::socket socket,
                         boost::asio::strand<boost::asio::io_context::executor_type> strand,
-                        std::unordered_map<std::string, std::shared_ptr<MessageQueue<std::string>>>& channels, QueueKind kind)
-                        : socket_(std::move(socket)), strand_(strand), channels_(channels), kind_(kind) {}
+                        std::unordered_map<std::string, std::shared_ptr<MessageQueue<std::string>>>& channels,
+                        QueueKind kind, std::shared_ptr<BrokerContext> ctx)
+        : socket_(std::move(socket)),
+          strand_(strand),
+          channels_(channels),
+          kind_(kind),
+          ctx_(std::move(ctx)) {
+            boost::system::error_code ip_ec;
+            auto ep = socket_.remote_endpoint(ip_ec);
+            peer_ip_ = ip_ec ? std::string("<unknown>") : ep.address().to_string();
+          }
         
         void start() { read_header(); }
 
     private:
         void read_header();
         void read_body(uint16_t channel_len, uint32_t payload_len);
-
+        void fail(const char* where, const boost::system::error_code& ec);
+        void reject_malformed(const char* where, uint16_t ch_len, uint32_t pl_len);
+        
         boost::asio::ip::tcp::socket socket_;
         boost::asio::strand<boost::asio::io_context::executor_type> strand_;
         std::unordered_map<std::string,
@@ -64,6 +85,9 @@ private:
         std::vector<char> buffer_;
         static constexpr size_t header_size = sizeof(uint16_t) + sizeof(uint32_t);
         QueueKind kind_;
+        std::shared_ptr<BrokerContext> ctx_;
+        std::string peer_ip_;
+        uint32_t malformed_frames_{0};
     };
 
     class SubscriberSession:
@@ -73,11 +97,13 @@ private:
                 SubscriberSession(boost::asio::ip::tcp::socket socket,
                 boost::asio::strand<boost::asio::io_context::executor_type> strand,
                 std::unordered_map<std::string,
-                    std::shared_ptr<MessageQueue<std::string>>>& channels, QueueKind kind):
+                    std::shared_ptr<MessageQueue<std::string>>>& channels, QueueKind kind,
+                    std::shared_ptr<BrokerContext> ctx):
                         socket_(std::move(socket)),
                         strand_(strand),
                         channels_(channels),
-                        kind_(kind)
+                        kind_(kind),
+                        ctx_(std::move(ctx))
                     {}
             ~SubscriberSession();
             void start() { read_subscription(); }
@@ -93,8 +119,11 @@ private:
         std::unordered_map<std::string,
         std::shared_ptr<MessageQueue<std::string>>>& channels_;
         QueueKind kind_;
+        std::shared_ptr<BrokerContext> ctx_;
         std::shared_ptr<MessageQueue<std::string>> queue_;
         std::vector<char> buffer_;
         std::atomic<bool> stopped_{false};
+        std::atomic<bool> worker_running_{false};
+        std::atomic<uint64_t> worker_gen_{0};
     };
 };
