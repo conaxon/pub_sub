@@ -6,6 +6,7 @@
 #include <thread>
 #include <chrono>
 #include <new>
+#include <atomic>
 
 // MPMC lock‑free queue adapter: allocates each T on the heap.
 // Template parameter must be a power of two.
@@ -16,17 +17,6 @@ public:
       : q_(CapacityPow2)
       , open_(true)
     {}
-
-    /*
-    void push(const T& item) override {
-        // allocate a copy on the heap
-        T* p = new T(item);
-        // spin until enqueued
-        while (!q_.push(p)) {
-            std::this_thread::yield();
-        }
-    }
-    */
 
     bool try_push(const T& item) override {
         if (!open_.load(std::memory_order_relaxed)) return false;

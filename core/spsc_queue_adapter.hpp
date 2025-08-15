@@ -4,7 +4,8 @@
 #include <optional>
 #include <thread>
 #include <chrono>
-#include "spsc_ring_buffer.hpp"
+#include <spsc_ring_buffer.hpp>
+#include <atomic>
 
 // block-free wait using spin + sleep(0) ok for demo
 // one producer and consumer
